@@ -4,19 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciador de Ninjas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥷</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="header">
-    <div class="header-title">
-      <span class="header-icon">✦</span>
+    <div class="header-brand">
+      <i class="fa-solid fa-user-ninja header-logo"></i>
       <h1>Gerenciador de Ninjas</h1>
     </div>
     <div class="header-actions">
-      <button id="btn-filter" class="btn btn-secondary" type="button">⚙ Filtrar</button>
-      <button id="btn-refresh" class="btn btn-secondary" type="button" title="Atualizar">↺</button>
-      <button id="btn-add" class="btn btn-primary" type="button">+ Ninja</button>
+      <button id="btn-filter" class="btn btn-ghost" type="button">
+        <i class="fa-solid fa-filter"></i>
+        <span>Filtrar</span>
+      </button>
+      <button id="btn-refresh" class="btn btn-ghost btn-icon-only" type="button" title="Atualizar">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+      <button id="btn-add" class="btn btn-primary" type="button">
+        <i class="fa-solid fa-plus"></i>
+        <span>Ninja</span>
+      </button>
     </div>
   </header>
 
@@ -27,8 +37,11 @@
     </div>
 
     <div id="empty-state" class="empty-state hidden">
+      <i class="fa-solid fa-user-ninja empty-icon"></i>
       <p id="empty-message">Nenhum ninja cadastrado.</p>
-      <button id="btn-clear-filters" class="btn btn-secondary hidden" type="button">Limpar Filtros</button>
+      <button id="btn-clear-filters" class="btn btn-ghost hidden" type="button">
+        <i class="fa-solid fa-xmark"></i> Limpar Filtros
+      </button>
     </div>
 
     <div id="cards-grid" class="cards-grid hidden"></div>
@@ -37,40 +50,54 @@
   <!-- Modal: Adicionar Ninja -->
   <div id="modal-add" class="modal-overlay hidden">
     <div class="modal">
-      <h2 class="modal-title">Adicionar Ninja</h2>
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-plus"></i> Adicionar Ninja
+        </h2>
+        <button class="modal-close" type="button" id="btn-add-cancel" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
       <div class="modal-body">
         <div class="field-group">
           <label class="field-label" for="add-ninja">Nome do ninja</label>
           <input id="add-ninja" type="text" class="input" placeholder="Ex: Naruto Uzumaki">
         </div>
-        <div class="field-group">
-          <label class="field-label" for="add-preco">Preço (custo por fragmento)</label>
-          <input id="add-preco" type="number" class="input" placeholder="Ex: 150">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="add-preco">Preço por fragmento</label>
+            <input id="add-preco" type="number" class="input" placeholder="Ex: 150">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="add-estrelas">Estrelas <span class="field-hint">(opcional)</span></label>
+            <input id="add-estrelas" type="number" class="input" placeholder="4 ou 5">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="add-frag-total">Fragmentos necessários</label>
+            <input id="add-frag-total" type="number" class="input" placeholder="Ex: 100">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="add-frag-falta">
+              Quantos falta <span class="field-hint">(do jogo)</span>
+            </label>
+            <input id="add-frag-falta" type="number" class="input" placeholder="Ex: 40">
+          </div>
         </div>
         <div class="field-group">
-          <label class="field-label" for="add-frag-total">Fragmentos necessários (total)</label>
-          <input id="add-frag-total" type="number" class="input" placeholder="Ex: 100">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="add-frag-falta">Quantos falta <span class="field-hint">(número que aparece no jogo)</span></label>
-          <input id="add-frag-falta" type="number" class="input" placeholder="Ex: 40">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="add-estrelas">Estrelas <span class="field-hint">(opcional — 4 ou 5)</span></label>
-          <input id="add-estrelas" type="number" class="input" placeholder="Ex: 5">
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">Elemento</label>
+          <label class="field-label">Elemento</label>
           <div id="add-elemento-options" class="options-container"></div>
         </div>
-        <div class="picker-group">
-          <label class="picker-label">Coleção / Origem</label>
+        <div class="field-group">
+          <label class="field-label">Coleção / Origem</label>
           <div id="add-colecao-options" class="options-container"></div>
         </div>
       </div>
       <div class="modal-footer">
-        <button id="btn-add-save" class="btn btn-primary" type="button">+ Adicionar</button>
-        <button id="btn-add-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+        <button id="btn-add-save" class="btn btn-primary btn-full" type="button">
+          <i class="fa-solid fa-plus"></i> Adicionar
+        </button>
       </div>
     </div>
   </div>
@@ -78,40 +105,54 @@
   <!-- Modal: Editar Ninja -->
   <div id="modal-edit" class="modal-overlay hidden">
     <div class="modal">
-      <h2 class="modal-title" id="edit-modal-title">Editar Ninja</h2>
+      <div class="modal-header">
+        <h2 class="modal-title" id="edit-modal-title">
+          <i class="fa-solid fa-pen"></i> Editar Ninja
+        </h2>
+        <button class="modal-close" type="button" id="btn-edit-cancel" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
       <div class="modal-body">
         <div class="field-group">
           <label class="field-label" for="edit-ninja">Nome do ninja</label>
           <input id="edit-ninja" type="text" class="input" placeholder="Ex: Naruto Uzumaki">
         </div>
-        <div class="field-group">
-          <label class="field-label" for="edit-preco">Preço (custo por fragmento)</label>
-          <input id="edit-preco" type="number" class="input" placeholder="Ex: 150">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="edit-preco">Preço por fragmento</label>
+            <input id="edit-preco" type="number" class="input" placeholder="Ex: 150">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-estrelas">Estrelas <span class="field-hint">(opcional)</span></label>
+            <input id="edit-estrelas" type="number" class="input" placeholder="4 ou 5">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="edit-frag-total">Fragmentos necessários</label>
+            <input id="edit-frag-total" type="number" class="input" placeholder="Ex: 100">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="edit-frag-falta">
+              Quantos falta <span class="field-hint">(do jogo)</span>
+            </label>
+            <input id="edit-frag-falta" type="number" class="input" placeholder="Ex: 40">
+          </div>
         </div>
         <div class="field-group">
-          <label class="field-label" for="edit-frag-total">Fragmentos necessários (total)</label>
-          <input id="edit-frag-total" type="number" class="input" placeholder="Ex: 100">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="edit-frag-falta">Quantos falta <span class="field-hint">(número que aparece no jogo)</span></label>
-          <input id="edit-frag-falta" type="number" class="input" placeholder="Ex: 40">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="edit-estrelas">Estrelas <span class="field-hint">(opcional — 4 ou 5)</span></label>
-          <input id="edit-estrelas" type="number" class="input" placeholder="Ex: 5">
-        </div>
-        <div class="picker-group">
-          <label class="picker-label">Elemento</label>
+          <label class="field-label">Elemento</label>
           <div id="edit-elemento-options" class="options-container"></div>
         </div>
-        <div class="picker-group">
-          <label class="picker-label">Coleção / Origem</label>
+        <div class="field-group">
+          <label class="field-label">Coleção / Origem</label>
           <div id="edit-colecao-options" class="options-container"></div>
         </div>
       </div>
       <div class="modal-footer">
-        <button id="btn-edit-save" class="btn btn-primary" type="button">💾 Salvar</button>
-        <button id="btn-edit-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+        <button id="btn-edit-save" class="btn btn-primary btn-full" type="button">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar
+        </button>
       </div>
     </div>
   </div>
@@ -119,26 +160,42 @@
   <!-- Modal: Filtrar e Ordenar -->
   <div id="modal-filter" class="modal-overlay hidden">
     <div class="modal">
-      <h2 class="modal-title">Filtrar e Ordenar</h2>
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-filter"></i> Filtrar e Ordenar
+        </h2>
+        <button class="modal-close" type="button" id="btn-filter-cancel" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
       <div class="modal-body">
-        <input id="filter-text" type="text" class="input" placeholder="Nome do ninja">
-        <input id="filter-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5)">
-        <div class="picker-group">
-          <label class="picker-label">Elemento</label>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="filter-text">Nome do ninja</label>
+            <input id="filter-text" type="text" class="input" placeholder="Buscar...">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="filter-estrelas">Estrelas</label>
+            <input id="filter-estrelas" type="number" class="input" placeholder="4 ou 5">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Elemento</label>
           <div id="filter-elemento-options" class="options-container"></div>
         </div>
-        <div class="picker-group">
-          <label class="picker-label">Coleção / Origem</label>
+        <div class="field-group">
+          <label class="field-label">Coleção / Origem</label>
           <div id="filter-colecao-options" class="options-container"></div>
         </div>
-        <div class="picker-group">
-          <label class="picker-label">Ordenar por</label>
+        <div class="field-group">
+          <label class="field-label">Ordenar por</label>
           <div id="filter-sort-options" class="options-container"></div>
         </div>
       </div>
       <div class="modal-footer">
-        <button id="btn-filter-apply" class="btn btn-primary" type="button">🔍 Aplicar</button>
-        <button id="btn-filter-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+        <button id="btn-filter-apply" class="btn btn-primary btn-full" type="button">
+          <i class="fa-solid fa-magnifying-glass"></i> Aplicar Filtros
+        </button>
       </div>
     </div>
   </div>
@@ -146,11 +203,17 @@
   <!-- Modal: Confirmar Exclusão -->
   <div id="modal-confirm" class="modal-overlay hidden">
     <div class="modal modal-small">
-      <h2 class="modal-title">Confirmar Exclusão</h2>
+      <div class="modal-header modal-header-danger">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-triangle-exclamation"></i> Confirmar Exclusão
+        </h2>
+      </div>
       <p class="confirm-message" id="confirm-message"></p>
-      <div class="modal-footer">
-        <button id="btn-confirm-yes" class="btn btn-danger" type="button">Excluir</button>
-        <button id="btn-confirm-no" class="btn btn-cancel" type="button">Cancelar</button>
+      <div class="modal-footer modal-footer-split">
+        <button id="btn-confirm-no" class="btn btn-ghost" type="button">Cancelar</button>
+        <button id="btn-confirm-yes" class="btn btn-danger" type="button">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
       </div>
     </div>
   </div>

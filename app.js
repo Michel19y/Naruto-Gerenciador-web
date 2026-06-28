@@ -176,40 +176,47 @@ function renderCards() {
   }
 }
 
+function starsHtml(n) {
+  if (!n) return '<span class="tag">Sem estrelas</span>';
+  var s = '';
+  for (var i = 0; i < Math.min(n, 5); i++) s += '<i class="fa-solid fa-star"></i>';
+  return '<span class="tag tag-stars">' + s + ' ' + n + '</span>';
+}
+
+function fmtNum(val) {
+  if (val == null) return 'N/A';
+  return Number(val).toLocaleString('pt-BR');
+}
+
 function createCard(ninja) {
-  const preco = ninja.preco != null ? ninja.preco.toString() : 'N/A';
-  const fragAtual = ninja.fragmentos_atual != null ? ninja.fragmentos_atual.toString() : 'N/A';
-  const fragTotal = ninja.fragmentos_total != null ? ninja.fragmentos_total.toString() : 'N/A';
-  const saldo = ninja.saldo != null ? ninja.saldo.toString() : 'N/A';
-  const estrelas = ninja.estrelas ? '⭐'.repeat(Math.min(ninja.estrelas, 5)) : '—';
-  const elemento = ninja.elemento || 'Nenhum';
-  const origem = colName(ninja.collection);
-  const faltando = ninja.fragmentosFaltando != null ? ninja.fragmentosFaltando.toString() : 'N/A';
-  const custo = ninja.custoTotal != null ? Math.round(ninja.custoTotal).toString() : 'N/A';
+  const preco    = fmtNum(ninja.preco);
+  const fragTotal = fmtNum(ninja.fragmentos_total);
+  const elemento  = ninja.elemento || 'Nenhum';
+  const origem    = colName(ninja.collection);
+  const faltando  = fmtNum(ninja.fragmentosFaltando);
+  const custo     = ninja.custoTotal != null ? fmtNum(Math.round(ninja.custoTotal)) : 'N/A';
 
   const card = document.createElement('div');
   card.className = 'ninja-card';
+  card.setAttribute('data-col', ninja.collection || '');
   card.innerHTML =
     '<div class="card-header">' +
-      '<span class="card-icon">✦</span>' +
+      '<i class="fa-solid fa-user-ninja card-ninja-icon"></i>' +
       '<span class="card-name">' + escapeHtml(ninja.ninja) + '</span>' +
-      '<span class="card-badge">Faltam: ' + escapeHtml(faltando) + '</span>' +
-      '<button class="btn-delete" type="button" title="Excluir">🗑️</button>' +
+      '<button class="btn-delete" type="button" title="Excluir">' +
+        '<i class="fa-solid fa-trash"></i>' +
+      '</button>' +
     '</div>' +
-    '<div class="card-details">' +
-      '<div class="card-row">' +
-        '<span><span class="label">Preço:</span> ' + escapeHtml(preco) + '</span>' +
-        '<span><span class="label">Custo Total:</span> ' + escapeHtml(custo) + '</span>' +
-        '<span><span class="label">Estrelas:</span> ' + estrelas + '</span>' +
-      '</div>' +
-      '<div class="card-row">' +
-        '<span><span class="label">Faltando:</span> ' + escapeHtml(faltando) + '</span>' +
-        '<span><span class="label">Frag. Total:</span> ' + escapeHtml(fragTotal) + '</span>' +
-            '</div>' +
-      '<div class="card-row">' +
-        '<span><span class="label">Elemento:</span> ' + escapeHtml(elemento) + '</span>' +
-        '<span><span class="label">Origem:</span> ' + escapeHtml(origem) + '</span>' +
-      '</div>' +
+    '<div class="card-tags">' +
+      '<span class="col-badge" data-col="' + escapeHtml(ninja.collection || '') + '">' + escapeHtml(origem) + '</span>' +
+      starsHtml(ninja.estrelas) +
+      '<span class="tag">' + escapeHtml(elemento) + '</span>' +
+    '</div>' +
+    '<div class="card-stats">' +
+      '<div class="stat"><span class="stat-label">Preço</span><span class="stat-value">' + escapeHtml(preco) + '</span></div>' +
+      '<div class="stat"><span class="stat-label">Frag. Total</span><span class="stat-value">' + escapeHtml(fragTotal) + '</span></div>' +
+      '<div class="stat"><span class="stat-label">Custo Total</span><span class="stat-value">' + escapeHtml(custo) + '</span></div>' +
+      '<div class="stat"><span class="stat-label">Faltando</span><span class="stat-value highlight">' + escapeHtml(faltando) + '</span></div>' +
     '</div>';
 
   card.addEventListener('click', function(e) {
