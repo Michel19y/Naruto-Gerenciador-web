@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Ninjas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-title">
+      <span class="header-icon">✦</span>
+      <h1>Gerenciador de Ninjas</h1>
+    </div>
+    <div class="header-actions">
+      <button id="btn-filter" class="btn btn-secondary" type="button">⚙ Filtrar</button>
+      <button id="btn-refresh" class="btn btn-secondary" type="button" title="Atualizar">↺</button>
+      <button id="btn-add" class="btn btn-primary" type="button">+ Ninja</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Carregando ninjas...</p>
+    </div>
+
+    <div id="empty-state" class="empty-state hidden">
+      <p id="empty-message">Nenhum ninja cadastrado.</p>
+      <button id="btn-clear-filters" class="btn btn-secondary hidden" type="button">Limpar Filtros</button>
+    </div>
+
+    <div id="cards-grid" class="cards-grid hidden"></div>
+  </main>
+
+  <!-- Modal: Adicionar Ninja -->
+  <div id="modal-add" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 class="modal-title">Adicionar Ninja</h2>
+      <div class="modal-body">
+        <input id="add-ninja" type="text" class="input" placeholder="Nome do ninja">
+        <input id="add-preco" type="number" class="input" placeholder="Preço">
+        <input id="add-frag-atual" type="number" class="input" placeholder="Fragmentos Atual">
+        <input id="add-frag-total" type="number" class="input" placeholder="Fragmentos Total">
+        <input id="add-saldo" type="number" class="input" placeholder="Saldo (opcional)">
+        <input id="add-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5, opcional)">
+        <div class="picker-group">
+          <label class="picker-label">Elemento</label>
+          <div id="add-elemento-options" class="options-container"></div>
+        </div>
+        <div class="picker-group">
+          <label class="picker-label">Coleção / Origem</label>
+          <div id="add-colecao-options" class="options-container"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-add-save" class="btn btn-primary" type="button">+ Adicionar</button>
+        <button id="btn-add-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Ninja -->
+  <div id="modal-edit" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 class="modal-title" id="edit-modal-title">Editar Ninja</h2>
+      <div class="modal-body">
+        <input id="edit-ninja" type="text" class="input" placeholder="Nome do ninja">
+        <input id="edit-preco" type="number" class="input" placeholder="Preço">
+        <input id="edit-frag-atual" type="number" class="input" placeholder="Fragmentos Atual">
+        <input id="edit-frag-total" type="number" class="input" placeholder="Fragmentos Total">
+        <input id="edit-saldo" type="number" class="input" placeholder="Saldo">
+        <input id="edit-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5)">
+        <div class="picker-group">
+          <label class="picker-label">Elemento</label>
+          <div id="edit-elemento-options" class="options-container"></div>
+        </div>
+        <div class="picker-group">
+          <label class="picker-label">Coleção / Origem</label>
+          <div id="edit-colecao-options" class="options-container"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-edit-save" class="btn btn-primary" type="button">💾 Salvar</button>
+        <button id="btn-edit-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Filtrar e Ordenar -->
+  <div id="modal-filter" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 class="modal-title">Filtrar e Ordenar</h2>
+      <div class="modal-body">
+        <input id="filter-text" type="text" class="input" placeholder="Nome do ninja">
+        <input id="filter-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5)">
+        <div class="picker-group">
+          <label class="picker-label">Elemento</label>
+          <div id="filter-elemento-options" class="options-container"></div>
+        </div>
+        <div class="picker-group">
+          <label class="picker-label">Coleção / Origem</label>
+          <div id="filter-colecao-options" class="options-container"></div>
+        </div>
+        <div class="picker-group">
+          <label class="picker-label">Ordenar por</label>
+          <div id="filter-sort-options" class="options-container"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-filter-apply" class="btn btn-primary" type="button">🔍 Aplicar</button>
+        <button id="btn-filter-cancel" class="btn btn-cancel" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar Exclusão -->
+  <div id="modal-confirm" class="modal-overlay hidden">
+    <div class="modal modal-small">
+      <h2 class="modal-title">Confirmar Exclusão</h2>
+      <p class="confirm-message" id="confirm-message"></p>
+      <div class="modal-footer">
+        <button id="btn-confirm-yes" class="btn btn-danger" type="button">Excluir</button>
+        <button id="btn-confirm-no" class="btn btn-cancel" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
