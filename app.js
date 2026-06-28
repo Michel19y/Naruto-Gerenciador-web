@@ -13,7 +13,7 @@ const db = firebase.firestore();
 
 // --- CONSTANTS ---
 const COLLECTIONS = ['pontos_guilda', 'pontos_lua', 'pontos_sol', 'treino_sobrevivencia', 'pontos_mensal'];
-const ELEMENTOS = ['Fogo', 'Água', 'Vento', 'Terra', 'Relâmpago', 'Outros', 'Nenhum', 'Ainda não adicionado'];
+const ELEMENTOS = ['Fogo', 'Água', 'Vento', 'Terra', 'Relâmpago'];
 const SORT_OPTIONS = ['Padrão', 'Mais Barato (Total)', 'Mais Perto de Upar'];
 
 const COL_NAMES = {
@@ -205,8 +205,7 @@ function createCard(ninja) {
       '<div class="card-row">' +
         '<span><span class="label">Faltando:</span> ' + escapeHtml(faltando) + '</span>' +
         '<span><span class="label">Frag. Total:</span> ' + escapeHtml(fragTotal) + '</span>' +
-        '<span><span class="label">Saldo:</span> ' + escapeHtml(saldo) + '</span>' +
-      '</div>' +
+            '</div>' +
       '<div class="card-row">' +
         '<span><span class="label">Elemento:</span> ' + escapeHtml(elemento) + '</span>' +
         '<span><span class="label">Origem:</span> ' + escapeHtml(origem) + '</span>' +
@@ -246,7 +245,7 @@ function renderOptions(containerId, options, selected, onSelect, displayMap) {
 // --- ADD MODAL ---
 function openAddModal() {
   addFormState = { elemento: 'Nenhum', colecao: COLLECTIONS[0] };
-  ['add-ninja', 'add-preco', 'add-frag-total', 'add-frag-falta', 'add-saldo', 'add-estrelas']
+  ['add-ninja', 'add-preco', 'add-frag-total', 'add-frag-falta', 'add-estrelas']
     .forEach(function(id) { document.getElementById(id).value = ''; });
   renderOptions('add-elemento-options', ELEMENTOS, addFormState.elemento, function(v) { addFormState.elemento = v; });
   renderOptions('add-colecao-options', COLLECTIONS, addFormState.colecao, function(v) { addFormState.colecao = v; }, COL_NAMES);
@@ -258,7 +257,6 @@ async function handleAddSave() {
   const preco = document.getElementById('add-preco').value;
   const fragTotal = parseInt(document.getElementById('add-frag-total').value) || 0;
   const fragFalta = parseInt(document.getElementById('add-frag-falta').value) || 0;
-  const saldo = document.getElementById('add-saldo').value;
   const estrelas = document.getElementById('add-estrelas').value;
 
   if (!ninja || !preco || !fragTotal) {
@@ -272,7 +270,6 @@ async function handleAddSave() {
       preco: parseInt(preco) || 0,
       fragmentos_atual: Math.max(0, fragTotal - fragFalta),
       fragmentos_total: fragTotal,
-      saldo: saldo ? parseInt(saldo) : null,
       estrelas: estrelas ? parseInt(estrelas) : null,
       elemento: addFormState.elemento,
       collection: addFormState.colecao,
@@ -296,7 +293,6 @@ function openEditModal(ninja) {
   document.getElementById('edit-frag-total').value = ninja.fragmentos_total != null ? ninja.fragmentos_total.toString() : '';
   const fragFaltaEdit = Math.max(0, (ninja.fragmentos_total || 0) - (ninja.fragmentos_atual || 0));
   document.getElementById('edit-frag-falta').value = fragFaltaEdit.toString();
-  document.getElementById('edit-saldo').value = ninja.saldo != null ? ninja.saldo.toString() : '';
   document.getElementById('edit-estrelas').value = ninja.estrelas != null ? ninja.estrelas.toString() : '';
 
   renderOptions('edit-elemento-options', ELEMENTOS, editFormState.elemento, function(v) { editFormState.elemento = v; });
@@ -311,7 +307,6 @@ async function handleEditSave() {
   const preco = document.getElementById('edit-preco').value;
   const fragTotal = parseInt(document.getElementById('edit-frag-total').value) || 0;
   const fragFalta = parseInt(document.getElementById('edit-frag-falta').value) || 0;
-  const saldo = document.getElementById('edit-saldo').value;
   const estrelas = document.getElementById('edit-estrelas').value;
 
   try {
@@ -320,7 +315,6 @@ async function handleEditSave() {
       preco: parseInt(preco) || null,
       fragmentos_atual: Math.max(0, fragTotal - fragFalta),
       fragmentos_total: fragTotal,
-      saldo: saldo ? parseInt(saldo) : null,
       estrelas: estrelas ? parseInt(estrelas) : null,
       elemento: editFormState.elemento,
     });
