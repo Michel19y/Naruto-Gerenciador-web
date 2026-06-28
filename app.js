@@ -1,14 +1,3 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-
 // --- FIREBASE ---
 const firebaseConfig = {
   apiKey: "AIzaSyAbBdc-sRQcz2olK98Y9P2GfVzD6HhoBdQ",
@@ -19,8 +8,8 @@ const firebaseConfig = {
   appId: "1:666018579115:web:5c554f39d5400a1cf42dee",
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 // --- CONSTANTS ---
 const COLLECTIONS = ['pontos_guilda', 'pontos_lua', 'pontos_sol', 'treino_sobrevivencia', 'pontos_mensal'];
@@ -44,7 +33,7 @@ let editNinja = null;
 let deleteTarget = null;
 let addFormState = { elemento: 'Nenhum', colecao: COLLECTIONS[0] };
 let editFormState = { elemento: '', colecao: '' };
-let filterFormState = { ...filters };
+let filterFormState = Object.assign({}, filters);
 
 // --- DOM ---
 const $grid = document.getElementById('cards-grid');
@@ -60,16 +49,16 @@ function colName(col) {
 
 function escapeHtml(str) {
   const d = document.createElement('div');
-  d.appendChild(document.createTextNode(String(str ?? '')));
+  d.appendChild(document.createTextNode(String(str == null ? '' : str)));
   return d.innerHTML;
 }
 
 function enrichNinja(n) {
-  const fragAtual = n.fragmentos_atual ?? 0;
-  const fragTotal = n.fragmentos_total ?? 0;
-  const preco = n.preco ?? 0;
+  const fragAtual = n.fragmentos_atual || 0;
+  const fragTotal = n.fragmentos_total || 0;
+  const preco = n.preco || 0;
   const faltando = Math.max(0, fragTotal - fragAtual);
-  return { ...n, fragmentosFaltando: faltando, custoTotal: faltando * preco };
+  return Object.assign({}, n, { fragmentosFaltando: faltando, custoTotal: faltando * preco });
 }
 
 // --- FILTER + SORT ---
@@ -77,22 +66,22 @@ function applyFilters() {
   let result = allNinjas.map(enrichNinja);
 
   if (filters.colecao && filters.colecao !== 'Todos') {
-    result = result.filter(n => n.collection === filters.colecao);
+    result = result.filter(function(n) { return n.collection === filters.colecao; });
   }
   if (filters.text.trim()) {
     const lower = filters.text.toLowerCase();
-    result = result.filter(n => (n.ninja || '').toLowerCase().includes(lower));
+    result = result.filter(function(n) { return (n.ninja || '').toLowerCase().includes(lower); });
   }
   if (filters.estrelas !== null) {
-    result = result.filter(n => n.estrelas === filters.estrelas);
+    result = result.filter(function(n) { return n.estrelas === filters.estrelas; });
   }
   if (filters.elemento && filters.elemento !== 'Todos') {
-    result = result.filter(n => n.elemento === filters.elemento);
+    result = result.filter(function(n) { return n.elemento === filters.elemento; });
   }
   if (filters.sortOrder === 'Mais Barato (Total)') {
-    result.sort((a, b) => (a.custoTotal ?? 0) - (b.custoTotal ?? 0));
+    result.sort(function(a, b) { return (a.custoTotal || 0) - (b.custoTotal || 0); });
   } else if (filters.sortOrder === 'Mais Perto de Upar') {
-    result.sort((a, b) => (a.fragmentosFaltando ?? 0) - (b.fragmentosFaltando ?? 0));
+    result.sort(function(a, b) { return (a.fragmentosFaltando || 0) - (b.fragmentosFaltando || 0); });
   }
 
   filteredNinjas = result;
@@ -103,20 +92,20 @@ async function loadNinjas() {
   setLoading(true);
   try {
     const all = [];
-    for (const col of COLLECTIONS) {
-      const snap = await getDocs(collection(db, col));
-      snap.forEach(d => {
+    for (let i = 0; i < COLLECTIONS.length; i++) {
+      const col = COLLECTIONS[i];
+      const snap = await db.collection(col).get();
+      snap.forEach(function(d) {
         const data = d.data();
-        all.push({
+        all.push(Object.assign({}, data, {
           id: d.id,
-          ...data,
           collection: col,
-          estrelas: data.estrelas ?? null,
-          elemento: data.elemento ?? 'Ainda não adicionado',
-          fragmentos_total: data.fragmentos_total ?? 0,
-          fragmentos_atual: data.fragmentos_atual ?? 0,
-          preco: data.preco ?? 0,
-        });
+          estrelas: data.estrelas != null ? data.estrelas : null,
+          elemento: data.elemento || 'Ainda não adicionado',
+          fragmentos_total: data.fragmentos_total || 0,
+          fragmentos_atual: data.fragmentos_atual || 0,
+          preco: data.preco || 0,
+        }));
       });
     }
     allNinjas = all;
@@ -124,30 +113,38 @@ async function loadNinjas() {
     renderCards();
   } catch (e) {
     console.error('Erro ao carregar ninjas:', e);
-    alert('Erro ao carregar dados do Firebase.');
+    alert('Erro ao carregar dados do Firebase: ' + e.message);
   } finally {
     setLoading(false);
   }
 }
 
 async function saveNew(data) {
-  const { colecao, ...fields } = data;
-  await addDoc(collection(db, colecao), fields);
+  const colecao = data.collection;
+  await db.collection(colecao).add({
+    ninja: data.ninja,
+    preco: data.preco,
+    fragmentos_atual: data.fragmentos_atual,
+    fragmentos_total: data.fragmentos_total,
+    saldo: data.saldo,
+    estrelas: data.estrelas,
+    elemento: data.elemento,
+  });
   await loadNinjas();
 }
 
 async function saveEdit(oldCol, id, newCol, data) {
   if (newCol !== oldCol) {
-    await addDoc(collection(db, newCol), data);
-    await deleteDoc(doc(db, oldCol, id));
+    await db.collection(newCol).add(data);
+    await db.collection(oldCol).doc(id).delete();
   } else {
-    await updateDoc(doc(db, oldCol, id), data);
+    await db.collection(oldCol).doc(id).update(data);
   }
   await loadNinjas();
 }
 
 async function deleteNinja(colecao, id) {
-  await deleteDoc(doc(db, colecao, id));
+  await db.collection(colecao).doc(id).delete();
   await loadNinjas();
 }
 
@@ -175,53 +172,52 @@ function renderCards() {
     $btnClearFilters.classList.toggle('hidden', !hasFilters);
   } else {
     $emptyState.classList.add('hidden');
-    filteredNinjas.forEach(n => $grid.appendChild(createCard(n)));
+    filteredNinjas.forEach(function(n) { $grid.appendChild(createCard(n)); });
   }
 }
 
 function createCard(ninja) {
-  const preco = ninja.preco?.toString() ?? 'N/A';
-  const fragAtual = ninja.fragmentos_atual?.toString() ?? 'N/A';
-  const fragTotal = ninja.fragmentos_total?.toString() ?? 'N/A';
+  const preco = ninja.preco != null ? ninja.preco.toString() : 'N/A';
+  const fragAtual = ninja.fragmentos_atual != null ? ninja.fragmentos_atual.toString() : 'N/A';
+  const fragTotal = ninja.fragmentos_total != null ? ninja.fragmentos_total.toString() : 'N/A';
   const saldo = ninja.saldo != null ? ninja.saldo.toString() : 'N/A';
   const estrelas = ninja.estrelas ? '⭐'.repeat(Math.min(ninja.estrelas, 5)) : '—';
-  const elemento = ninja.elemento ?? 'Nenhum';
+  const elemento = ninja.elemento || 'Nenhum';
   const origem = colName(ninja.collection);
-  const faltando = ninja.fragmentosFaltando?.toString() ?? 'N/A';
+  const faltando = ninja.fragmentosFaltando != null ? ninja.fragmentosFaltando.toString() : 'N/A';
   const custo = ninja.custoTotal != null ? Math.round(ninja.custoTotal).toString() : 'N/A';
 
   const card = document.createElement('div');
   card.className = 'ninja-card';
-  card.innerHTML = `
-    <div class="card-header">
-      <span class="card-icon">✦</span>
-      <span class="card-name">${escapeHtml(ninja.ninja)}</span>
-      <span class="card-badge">Faltam: ${escapeHtml(faltando)}</span>
-      <button class="btn-delete" type="button" title="Excluir">🗑️</button>
-    </div>
-    <div class="card-details">
-      <div class="card-row">
-        <span><span class="label">Preço:</span> ${escapeHtml(preco)}</span>
-        <span><span class="label">Custo Total:</span> ${escapeHtml(custo)}</span>
-        <span><span class="label">Estrelas:</span> ${estrelas}</span>
-      </div>
-      <div class="card-row">
-        <span><span class="label">Frag. Atual:</span> ${escapeHtml(fragAtual)}</span>
-        <span><span class="label">Frag. Total:</span> ${escapeHtml(fragTotal)}</span>
-        <span><span class="label">Saldo:</span> ${escapeHtml(saldo)}</span>
-      </div>
-      <div class="card-row">
-        <span><span class="label">Elemento:</span> ${escapeHtml(elemento)}</span>
-        <span><span class="label">Origem:</span> ${escapeHtml(origem)}</span>
-      </div>
-    </div>
-  `;
+  card.innerHTML =
+    '<div class="card-header">' +
+      '<span class="card-icon">✦</span>' +
+      '<span class="card-name">' + escapeHtml(ninja.ninja) + '</span>' +
+      '<span class="card-badge">Faltam: ' + escapeHtml(faltando) + '</span>' +
+      '<button class="btn-delete" type="button" title="Excluir">🗑️</button>' +
+    '</div>' +
+    '<div class="card-details">' +
+      '<div class="card-row">' +
+        '<span><span class="label">Preço:</span> ' + escapeHtml(preco) + '</span>' +
+        '<span><span class="label">Custo Total:</span> ' + escapeHtml(custo) + '</span>' +
+        '<span><span class="label">Estrelas:</span> ' + estrelas + '</span>' +
+      '</div>' +
+      '<div class="card-row">' +
+        '<span><span class="label">Frag. Atual:</span> ' + escapeHtml(fragAtual) + '</span>' +
+        '<span><span class="label">Frag. Total:</span> ' + escapeHtml(fragTotal) + '</span>' +
+        '<span><span class="label">Saldo:</span> ' + escapeHtml(saldo) + '</span>' +
+      '</div>' +
+      '<div class="card-row">' +
+        '<span><span class="label">Elemento:</span> ' + escapeHtml(elemento) + '</span>' +
+        '<span><span class="label">Origem:</span> ' + escapeHtml(origem) + '</span>' +
+      '</div>' +
+    '</div>';
 
-  card.addEventListener('click', e => {
+  card.addEventListener('click', function(e) {
     if (!e.target.closest('.btn-delete')) openEditModal(ninja);
   });
 
-  card.querySelector('.btn-delete').addEventListener('click', e => {
+  card.querySelector('.btn-delete').addEventListener('click', function(e) {
     e.stopPropagation();
     openConfirmDelete(ninja);
   });
@@ -230,16 +226,16 @@ function createCard(ninja) {
 }
 
 // --- OPTION BUTTONS RENDERER ---
-function renderOptions(containerId, options, selected, onSelect, displayMap = {}) {
+function renderOptions(containerId, options, selected, onSelect, displayMap) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
-  options.forEach(opt => {
+  options.forEach(function(opt) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'option-btn' + (selected === opt ? ' selected' : '');
-    btn.textContent = displayMap[opt] ?? opt;
-    btn.addEventListener('click', () => {
-      container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.textContent = (displayMap && displayMap[opt]) ? displayMap[opt] : opt;
+    btn.addEventListener('click', function() {
+      container.querySelectorAll('.option-btn').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
       onSelect(opt);
     });
@@ -251,9 +247,9 @@ function renderOptions(containerId, options, selected, onSelect, displayMap = {}
 function openAddModal() {
   addFormState = { elemento: 'Nenhum', colecao: COLLECTIONS[0] };
   ['add-ninja', 'add-preco', 'add-frag-atual', 'add-frag-total', 'add-saldo', 'add-estrelas']
-    .forEach(id => document.getElementById(id).value = '');
-  renderOptions('add-elemento-options', ELEMENTOS, addFormState.elemento, v => { addFormState.elemento = v; });
-  renderOptions('add-colecao-options', COLLECTIONS, addFormState.colecao, v => { addFormState.colecao = v; }, COL_NAMES);
+    .forEach(function(id) { document.getElementById(id).value = ''; });
+  renderOptions('add-elemento-options', ELEMENTOS, addFormState.elemento, function(v) { addFormState.elemento = v; });
+  renderOptions('add-colecao-options', COLLECTIONS, addFormState.colecao, function(v) { addFormState.colecao = v; }, COL_NAMES);
   show('modal-add');
 }
 
@@ -272,38 +268,38 @@ async function handleAddSave() {
 
   try {
     await saveNew({
-      ninja,
+      ninja: ninja,
       preco: parseInt(preco) || 0,
       fragmentos_atual: parseInt(fragAtual) || 0,
       fragmentos_total: parseInt(fragTotal) || 0,
       saldo: saldo ? parseInt(saldo) : null,
       estrelas: estrelas ? parseInt(estrelas) : null,
       elemento: addFormState.elemento,
-      colecao: addFormState.colecao,
+      collection: addFormState.colecao,
     });
     hide('modal-add');
   } catch (e) {
     console.error(e);
-    alert('Erro ao adicionar ninja.');
+    alert('Erro ao adicionar ninja: ' + e.message);
   }
 }
 
 // --- EDIT MODAL ---
 function openEditModal(ninja) {
   editNinja = ninja;
-  editFormState.elemento = ninja.elemento ?? 'Ainda não adicionado';
-  editFormState.colecao = ninja.collection ?? COLLECTIONS[0];
+  editFormState.elemento = ninja.elemento || 'Ainda não adicionado';
+  editFormState.colecao = ninja.collection || COLLECTIONS[0];
 
-  document.getElementById('edit-modal-title').textContent = `Editar ${ninja.ninja ?? ''}`;
-  document.getElementById('edit-ninja').value = ninja.ninja ?? '';
-  document.getElementById('edit-preco').value = ninja.preco?.toString() ?? '';
-  document.getElementById('edit-frag-atual').value = ninja.fragmentos_atual?.toString() ?? '';
-  document.getElementById('edit-frag-total').value = ninja.fragmentos_total?.toString() ?? '';
-  document.getElementById('edit-saldo').value = ninja.saldo?.toString() ?? '';
-  document.getElementById('edit-estrelas').value = ninja.estrelas?.toString() ?? '';
+  document.getElementById('edit-modal-title').textContent = 'Editar ' + (ninja.ninja || '');
+  document.getElementById('edit-ninja').value = ninja.ninja || '';
+  document.getElementById('edit-preco').value = ninja.preco != null ? ninja.preco.toString() : '';
+  document.getElementById('edit-frag-atual').value = ninja.fragmentos_atual != null ? ninja.fragmentos_atual.toString() : '';
+  document.getElementById('edit-frag-total').value = ninja.fragmentos_total != null ? ninja.fragmentos_total.toString() : '';
+  document.getElementById('edit-saldo').value = ninja.saldo != null ? ninja.saldo.toString() : '';
+  document.getElementById('edit-estrelas').value = ninja.estrelas != null ? ninja.estrelas.toString() : '';
 
-  renderOptions('edit-elemento-options', ELEMENTOS, editFormState.elemento, v => { editFormState.elemento = v; });
-  renderOptions('edit-colecao-options', COLLECTIONS, editFormState.colecao, v => { editFormState.colecao = v; }, COL_NAMES);
+  renderOptions('edit-elemento-options', ELEMENTOS, editFormState.elemento, function(v) { editFormState.elemento = v; });
+  renderOptions('edit-colecao-options', COLLECTIONS, editFormState.colecao, function(v) { editFormState.colecao = v; }, COL_NAMES);
   show('modal-edit');
 }
 
@@ -331,22 +327,22 @@ async function handleEditSave() {
     editNinja = null;
   } catch (e) {
     console.error(e);
-    alert('Erro ao salvar ninja.');
+    alert('Erro ao salvar ninja: ' + e.message);
   }
 }
 
 // --- FILTER MODAL ---
 function openFilterModal() {
-  filterFormState = { ...filters };
+  filterFormState = Object.assign({}, filters);
   document.getElementById('filter-text').value = filterFormState.text;
-  document.getElementById('filter-estrelas').value = filterFormState.estrelas?.toString() ?? '';
+  document.getElementById('filter-estrelas').value = filterFormState.estrelas != null ? filterFormState.estrelas.toString() : '';
 
-  const filterElementos = ['Todos', ...ELEMENTOS];
-  const filterColecoes = ['Todos', ...COLLECTIONS];
+  const filterElementos = ['Todos'].concat(ELEMENTOS);
+  const filterColecoes = ['Todos'].concat(COLLECTIONS);
 
-  renderOptions('filter-elemento-options', filterElementos, filterFormState.elemento ?? 'Todos', v => { filterFormState.elemento = v; });
-  renderOptions('filter-colecao-options', filterColecoes, filterFormState.colecao ?? 'Todos', v => { filterFormState.colecao = v; }, COL_NAMES);
-  renderOptions('filter-sort-options', SORT_OPTIONS, filterFormState.sortOrder, v => { filterFormState.sortOrder = v; });
+  renderOptions('filter-elemento-options', filterElementos, filterFormState.elemento || 'Todos', function(v) { filterFormState.elemento = v; });
+  renderOptions('filter-colecao-options', filterColecoes, filterFormState.colecao || 'Todos', function(v) { filterFormState.colecao = v; }, COL_NAMES);
+  renderOptions('filter-sort-options', SORT_OPTIONS, filterFormState.sortOrder, function(v) { filterFormState.sortOrder = v; });
   show('modal-filter');
 }
 
@@ -354,8 +350,8 @@ function handleFilterApply() {
   filters.text = document.getElementById('filter-text').value;
   const estrelasVal = document.getElementById('filter-estrelas').value;
   filters.estrelas = estrelasVal ? parseInt(estrelasVal) : null;
-  filters.elemento = filterFormState.elemento ?? 'Todos';
-  filters.colecao = filterFormState.colecao ?? 'Todos';
+  filters.elemento = filterFormState.elemento || 'Todos';
+  filters.colecao = filterFormState.colecao || 'Todos';
   filters.sortOrder = filterFormState.sortOrder;
 
   applyFilters();
@@ -373,20 +369,21 @@ function clearFilters() {
 function openConfirmDelete(ninja) {
   deleteTarget = ninja;
   document.getElementById('confirm-message').textContent =
-    `Excluir "${ninja.ninja}" da coleção "${colName(ninja.collection)}"? Esta ação é irreversível.`;
+    'Excluir "' + (ninja.ninja || '') + '" da coleção "' + colName(ninja.collection) + '"? Esta ação é irreversível.';
   show('modal-confirm');
 }
 
 async function handleConfirmDelete() {
   if (!deleteTarget) return;
-  const { id, collection: col } = deleteTarget;
+  const id = deleteTarget.id;
+  const col = deleteTarget.collection;
   hide('modal-confirm');
   deleteTarget = null;
   try {
     await deleteNinja(col, id);
   } catch (e) {
     console.error(e);
-    alert('Erro ao excluir ninja.');
+    alert('Erro ao excluir ninja: ' + e.message);
   }
 }
 
@@ -401,19 +398,19 @@ document.getElementById('btn-refresh').addEventListener('click', loadNinjas);
 document.getElementById('btn-clear-filters').addEventListener('click', clearFilters);
 
 document.getElementById('btn-add-save').addEventListener('click', handleAddSave);
-document.getElementById('btn-add-cancel').addEventListener('click', () => hide('modal-add'));
+document.getElementById('btn-add-cancel').addEventListener('click', function() { hide('modal-add'); });
 
 document.getElementById('btn-edit-save').addEventListener('click', handleEditSave);
-document.getElementById('btn-edit-cancel').addEventListener('click', () => { hide('modal-edit'); editNinja = null; });
+document.getElementById('btn-edit-cancel').addEventListener('click', function() { hide('modal-edit'); editNinja = null; });
 
 document.getElementById('btn-filter-apply').addEventListener('click', handleFilterApply);
-document.getElementById('btn-filter-cancel').addEventListener('click', () => hide('modal-filter'));
+document.getElementById('btn-filter-cancel').addEventListener('click', function() { hide('modal-filter'); });
 
 document.getElementById('btn-confirm-yes').addEventListener('click', handleConfirmDelete);
-document.getElementById('btn-confirm-no').addEventListener('click', () => { hide('modal-confirm'); deleteTarget = null; });
+document.getElementById('btn-confirm-no').addEventListener('click', function() { hide('modal-confirm'); deleteTarget = null; });
 
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) {
     if (e.target === overlay) overlay.classList.add('hidden');
   });
 });
