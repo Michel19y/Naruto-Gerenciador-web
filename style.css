@@ -509,6 +509,14 @@ body {
   color: var(--text);
 }
 
+.option-btn-static {
+  cursor: default;
+  color: var(--text-muted);
+  border-color: var(--border);
+  background: var(--bg-elevated);
+  pointer-events: none;
+}
+
 .option-btn.selected {
   background: var(--accent);
   border-color: var(--accent);

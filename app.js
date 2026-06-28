@@ -237,6 +237,12 @@ function createCard(ninja) {
   return card;
 }
 
+// --- STATIC DISPLAY (readonly) ---
+function renderStatic(containerId, value) {
+  var container = document.getElementById(containerId);
+  container.innerHTML = '<span class="option-btn option-btn-static">' + escapeHtml(value) + '</span>';
+}
+
 // --- OPTION BUTTONS RENDERER ---
 function renderOptions(containerId, options, selected, onSelect, displayMap) {
   const container = document.getElementById(containerId);
@@ -308,8 +314,8 @@ function openEditModal(ninja) {
   document.getElementById('edit-frag-falta').value = fragFaltaEdit.toString();
   document.getElementById('edit-estrelas').value = ninja.estrelas != null ? ninja.estrelas.toString() : '';
 
-  renderOptions('edit-elemento-options', ELEMENTOS, editFormState.elemento, function(v) { editFormState.elemento = v; });
-  renderOptions('edit-colecao-options', COLLECTIONS, editFormState.colecao, function(v) { editFormState.colecao = v; }, COL_NAMES);
+  renderStatic('edit-elemento-options', editFormState.elemento);
+  renderStatic('edit-colecao-options', COL_NAMES[editFormState.colecao] || editFormState.colecao);
   show('modal-edit');
 }
 
@@ -323,13 +329,13 @@ async function handleEditSave() {
   const estrelas = document.getElementById('edit-estrelas').value;
 
   try {
-    await saveEdit(editNinja.collection, editNinja.id, editFormState.colecao, {
+    await saveEdit(editNinja.collection, editNinja.id, editNinja.collection, {
       ninja: ninjaName,
       preco: parseInt(preco) || null,
       fragmentos_atual: Math.max(0, fragTotal - fragFalta),
       fragmentos_total: fragTotal,
       estrelas: estrelas ? parseInt(estrelas) : null,
-      elemento: editFormState.elemento,
+      elemento: editNinja.elemento,
     });
     hide('modal-edit');
     editNinja = null;
