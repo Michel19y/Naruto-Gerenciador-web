@@ -310,7 +310,7 @@ function openEditModal(ninja) {
 async function handleEditSave() {
   if (!editNinja) return;
 
-  const ninjaName = document.getElementById('edit-ninja').value.trim();
+  const ninjaName = editNinja.ninja;
   const preco = document.getElementById('edit-preco').value;
   const fragTotal = parseInt(document.getElementById('edit-frag-total').value) || 0;
   const fragFalta = parseInt(document.getElementById('edit-frag-falta').value) || 0;

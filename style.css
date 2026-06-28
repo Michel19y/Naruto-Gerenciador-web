@@ -472,6 +472,19 @@ body {
 
 .input::placeholder { color: var(--text-dim); }
 
+.input-readonly {
+  cursor: default;
+  color: var(--text-muted);
+  border-color: var(--border);
+  background: var(--bg-elevated);
+  user-select: none;
+}
+
+.input-readonly:focus {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
 /* ── PICKERS ── */
 .options-container {
   display: flex;
