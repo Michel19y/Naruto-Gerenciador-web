@@ -12,7 +12,13 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // --- CONSTANTS ---
-const COLLECTIONS = ['pontos_guilda', 'pontos_lua', 'pontos_sol', 'treino_sobrevivencia', 'pontos_mensal'];
+const COLLECTIONS = [
+  // 'pontos_guilda',       // todos comprados
+  // 'pontos_lua',          // todos comprados
+  'pontos_sol',
+  'treino_sobrevivencia',
+  // 'pontos_mensal',       // todos comprados
+];
 const ELEMENTOS = ['Fogo', 'Água', 'Vento', 'Terra', 'Relâmpago'];
 const SORT_OPTIONS = ['Padrão', 'Mais Barato (Total)', 'Mais Perto de Upar'];
 
