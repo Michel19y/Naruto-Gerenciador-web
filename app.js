@@ -203,7 +203,6 @@ function createCard(ninja) {
         '<span><span class="label">Estrelas:</span> ' + estrelas + '</span>' +
       '</div>' +
       '<div class="card-row">' +
-        '<span><span class="label">Frag. Atual:</span> ' + escapeHtml(fragAtual) + '</span>' +
         '<span><span class="label">Frag. Total:</span> ' + escapeHtml(fragTotal) + '</span>' +
         '<span><span class="label">Saldo:</span> ' + escapeHtml(saldo) + '</span>' +
       '</div>' +
@@ -246,7 +245,7 @@ function renderOptions(containerId, options, selected, onSelect, displayMap) {
 // --- ADD MODAL ---
 function openAddModal() {
   addFormState = { elemento: 'Nenhum', colecao: COLLECTIONS[0] };
-  ['add-ninja', 'add-preco', 'add-frag-atual', 'add-frag-total', 'add-saldo', 'add-estrelas']
+  ['add-ninja', 'add-preco', 'add-frag-total', 'add-frag-falta', 'add-saldo', 'add-estrelas']
     .forEach(function(id) { document.getElementById(id).value = ''; });
   renderOptions('add-elemento-options', ELEMENTOS, addFormState.elemento, function(v) { addFormState.elemento = v; });
   renderOptions('add-colecao-options', COLLECTIONS, addFormState.colecao, function(v) { addFormState.colecao = v; }, COL_NAMES);
@@ -256,13 +255,13 @@ function openAddModal() {
 async function handleAddSave() {
   const ninja = document.getElementById('add-ninja').value.trim();
   const preco = document.getElementById('add-preco').value;
-  const fragAtual = document.getElementById('add-frag-atual').value;
-  const fragTotal = document.getElementById('add-frag-total').value;
+  const fragTotal = parseInt(document.getElementById('add-frag-total').value) || 0;
+  const fragFalta = parseInt(document.getElementById('add-frag-falta').value) || 0;
   const saldo = document.getElementById('add-saldo').value;
   const estrelas = document.getElementById('add-estrelas').value;
 
-  if (!ninja || !preco || !fragAtual || !fragTotal) {
-    alert('Preencha o Nome, Preço e Fragmentos (Atual e Total).');
+  if (!ninja || !preco || !fragTotal) {
+    alert('Preencha o Nome, Preço e Fragmentos necessários.');
     return;
   }
 
@@ -270,8 +269,8 @@ async function handleAddSave() {
     await saveNew({
       ninja: ninja,
       preco: parseInt(preco) || 0,
-      fragmentos_atual: parseInt(fragAtual) || 0,
-      fragmentos_total: parseInt(fragTotal) || 0,
+      fragmentos_atual: Math.max(0, fragTotal - fragFalta),
+      fragmentos_total: fragTotal,
       saldo: saldo ? parseInt(saldo) : null,
       estrelas: estrelas ? parseInt(estrelas) : null,
       elemento: addFormState.elemento,
@@ -293,8 +292,9 @@ function openEditModal(ninja) {
   document.getElementById('edit-modal-title').textContent = 'Editar ' + (ninja.ninja || '');
   document.getElementById('edit-ninja').value = ninja.ninja || '';
   document.getElementById('edit-preco').value = ninja.preco != null ? ninja.preco.toString() : '';
-  document.getElementById('edit-frag-atual').value = ninja.fragmentos_atual != null ? ninja.fragmentos_atual.toString() : '';
   document.getElementById('edit-frag-total').value = ninja.fragmentos_total != null ? ninja.fragmentos_total.toString() : '';
+  const fragFaltaEdit = Math.max(0, (ninja.fragmentos_total || 0) - (ninja.fragmentos_atual || 0));
+  document.getElementById('edit-frag-falta').value = fragFaltaEdit.toString();
   document.getElementById('edit-saldo').value = ninja.saldo != null ? ninja.saldo.toString() : '';
   document.getElementById('edit-estrelas').value = ninja.estrelas != null ? ninja.estrelas.toString() : '';
 
@@ -308,8 +308,8 @@ async function handleEditSave() {
 
   const ninjaName = document.getElementById('edit-ninja').value.trim();
   const preco = document.getElementById('edit-preco').value;
-  const fragAtual = document.getElementById('edit-frag-atual').value;
-  const fragTotal = document.getElementById('edit-frag-total').value;
+  const fragTotal = parseInt(document.getElementById('edit-frag-total').value) || 0;
+  const fragFalta = parseInt(document.getElementById('edit-frag-falta').value) || 0;
   const saldo = document.getElementById('edit-saldo').value;
   const estrelas = document.getElementById('edit-estrelas').value;
 
@@ -317,8 +317,8 @@ async function handleEditSave() {
     await saveEdit(editNinja.collection, editNinja.id, editFormState.colecao, {
       ninja: ninjaName,
       preco: parseInt(preco) || null,
-      fragmentos_atual: parseInt(fragAtual) || 0,
-      fragmentos_total: parseInt(fragTotal) || 0,
+      fragmentos_atual: Math.max(0, fragTotal - fragFalta),
+      fragmentos_total: fragTotal,
       saldo: saldo ? parseInt(saldo) : null,
       estrelas: estrelas ? parseInt(estrelas) : null,
       elemento: editFormState.elemento,
