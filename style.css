@@ -332,6 +332,24 @@ body {
   color: var(--text-muted);
 }
 
+/* FIELD GROUPS */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field-hint {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
 /* PICKERS */
 .picker-group {
   display: flex;

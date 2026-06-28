@@ -39,12 +39,30 @@
     <div class="modal">
       <h2 class="modal-title">Adicionar Ninja</h2>
       <div class="modal-body">
-        <input id="add-ninja" type="text" class="input" placeholder="Nome do ninja">
-        <input id="add-preco" type="number" class="input" placeholder="Preço">
-        <input id="add-frag-total" type="number" class="input" placeholder="Fragmentos necessários (total)">
-        <input id="add-frag-falta" type="number" class="input" placeholder="Quantos falta (do jogo)">
-        <input id="add-saldo" type="number" class="input" placeholder="Saldo (opcional)">
-        <input id="add-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5, opcional)">
+        <div class="field-group">
+          <label class="field-label" for="add-ninja">Nome do ninja</label>
+          <input id="add-ninja" type="text" class="input" placeholder="Ex: Naruto Uzumaki">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="add-preco">Preço (custo por fragmento)</label>
+          <input id="add-preco" type="number" class="input" placeholder="Ex: 150">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="add-frag-total">Fragmentos necessários (total)</label>
+          <input id="add-frag-total" type="number" class="input" placeholder="Ex: 100">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="add-frag-falta">Quantos falta <span class="field-hint">(número que aparece no jogo)</span></label>
+          <input id="add-frag-falta" type="number" class="input" placeholder="Ex: 40">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="add-saldo">Saldo atual <span class="field-hint">(opcional)</span></label>
+          <input id="add-saldo" type="number" class="input" placeholder="Ex: 3200">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="add-estrelas">Estrelas <span class="field-hint">(opcional — 4 ou 5)</span></label>
+          <input id="add-estrelas" type="number" class="input" placeholder="Ex: 5">
+        </div>
         <div class="picker-group">
           <label class="picker-label">Elemento</label>
           <div id="add-elemento-options" class="options-container"></div>
@@ -66,12 +84,30 @@
     <div class="modal">
       <h2 class="modal-title" id="edit-modal-title">Editar Ninja</h2>
       <div class="modal-body">
-        <input id="edit-ninja" type="text" class="input" placeholder="Nome do ninja">
-        <input id="edit-preco" type="number" class="input" placeholder="Preço">
-        <input id="edit-frag-total" type="number" class="input" placeholder="Fragmentos necessários (total)">
-        <input id="edit-frag-falta" type="number" class="input" placeholder="Quantos falta (do jogo)">
-        <input id="edit-saldo" type="number" class="input" placeholder="Saldo">
-        <input id="edit-estrelas" type="number" class="input" placeholder="Estrelas (4 ou 5)">
+        <div class="field-group">
+          <label class="field-label" for="edit-ninja">Nome do ninja</label>
+          <input id="edit-ninja" type="text" class="input" placeholder="Ex: Naruto Uzumaki">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="edit-preco">Preço (custo por fragmento)</label>
+          <input id="edit-preco" type="number" class="input" placeholder="Ex: 150">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="edit-frag-total">Fragmentos necessários (total)</label>
+          <input id="edit-frag-total" type="number" class="input" placeholder="Ex: 100">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="edit-frag-falta">Quantos falta <span class="field-hint">(número que aparece no jogo)</span></label>
+          <input id="edit-frag-falta" type="number" class="input" placeholder="Ex: 40">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="edit-saldo">Saldo atual <span class="field-hint">(opcional)</span></label>
+          <input id="edit-saldo" type="number" class="input" placeholder="Ex: 3200">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="edit-estrelas">Estrelas <span class="field-hint">(opcional — 4 ou 5)</span></label>
+          <input id="edit-estrelas" type="number" class="input" placeholder="Ex: 5">
+        </div>
         <div class="picker-group">
           <label class="picker-label">Elemento</label>
           <div id="edit-elemento-options" class="options-container"></div>

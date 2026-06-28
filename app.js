@@ -203,6 +203,7 @@ function createCard(ninja) {
         '<span><span class="label">Estrelas:</span> ' + estrelas + '</span>' +
       '</div>' +
       '<div class="card-row">' +
+        '<span><span class="label">Faltando:</span> ' + escapeHtml(faltando) + '</span>' +
         '<span><span class="label">Frag. Total:</span> ' + escapeHtml(fragTotal) + '</span>' +
         '<span><span class="label">Saldo:</span> ' + escapeHtml(saldo) + '</span>' +
       '</div>' +
