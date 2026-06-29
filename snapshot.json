@@ -1,0 +1,54 @@
+{
+  "_exportedAt": "2026-06-28",
+  "ninjas": [
+
+    // ── SOL (pontos_sol) ────────────────────────────────────────────
+
+    { "ninja": "Kushina Uzumaki",                        "collection": "pontos_sol",           "estrelas": 3, "elemento": "Vento",    "preco": 400,  "fragmentos_total": 100, "fragmentos_atual": 33  },
+    { "ninja": "Omoi",                                   "collection": "pontos_sol",           "estrelas": 4, "elemento": "Relâmpago","preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 13  },
+    { "ninja": "Kushimaru Kuriarere[Reanimação]",        "collection": "pontos_sol",           "estrelas": 3, "elemento": "Vento",    "preco": 200,  "fragmentos_total": 100, "fragmentos_atual": 78  },
+    { "ninja": "Mangetsu Hozuki[Reanimação]",            "collection": "pontos_sol",           "estrelas": 4, "elemento": "Água",     "preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Chojuro[Sete Espadachins Ninja]",        "collection": "pontos_sol",           "estrelas": 4, "elemento": "Água",     "preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Fukuki Suikazan[Reanimação]",            "collection": "pontos_sol",           "estrelas": 4, "elemento": "Água",     "preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Utakata[Jinchuuriki da Seis Caudas]",    "collection": "pontos_sol",           "estrelas": 3, "elemento": "Água",     "preco": 400,  "fragmentos_total": 100, "fragmentos_atual": 21  },
+    { "ninja": "Toroi[Reanimação]",                      "collection": "pontos_sol",           "estrelas": 4, "elemento": "Relâmpago","preco": 150,  "fragmentos_total": 200, "fragmentos_atual": 12  },
+    { "ninja": "Samui",                                  "collection": "pontos_sol",           "estrelas": 4, "elemento": "Relâmpago","preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 24  },
+    { "ninja": "Jinpachi Munashi[Reanimação]",           "collection": "pontos_sol",           "estrelas": 3, "elemento": "Fogo",     "preco": 200,  "fragmentos_total": 100, "fragmentos_atual": 0   },
+
+    // ── SOBREVIVÊNCIA (treino_sobrevivencia) ────────────────────────
+
+    { "ninja": "Mifune",                                 "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 12  },
+    { "ninja": "Lee[Portão de Alegria]",                 "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Temari[Cúpula dos Cinco Kage]",          "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Vento",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 43  },
+    { "ninja": "Inochi",                                 "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 197 },
+    { "ninja": "Jiraiya[Modo Sennin]",                   "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Fogo",     "preco": 1300, "fragmentos_total": 100, "fragmentos_atual": 20  },
+    { "ninja": "Pakura",                                 "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Fogo",     "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 52  },
+    { "ninja": "Lee[Grande Guerra Ninja]",               "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 12  },
+    { "ninja": "Kinkaku[Reanimação]",                    "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Relâmpago","preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Pain: Caminho Animal",                   "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Água",     "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 86  },
+    { "ninja": "Danzou",                                 "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Fogo",     "preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 25  },
+    { "ninja": "Shikamaru[Chunnin]",                     "collection": "treino_sobrevivencia", "estrelas": null, "elemento": "Terra", "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 60  },
+    { "ninja": "Kurotsuchi",                             "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 460,  "fragmentos_total": 200, "fragmentos_atual": 87  },
+    { "ninja": "Kabuto[Cobra]",                          "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Água",     "preco": 650,  "fragmentos_total": 100, "fragmentos_atual": 26  },
+    { "ninja": "Ameyuri Ringo[Reanimação]",              "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Relâmpago","preco": 1300, "fragmentos_total": 100, "fragmentos_atual": 93  },
+    { "ninja": "Killer B 7 Espadas",                     "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Relâmpago","preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 8   },
+    { "ninja": "Lee[Grande Guerra NInja]",               "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Zabuza Edo",                             "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Água",     "preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 5   },
+    { "ninja": "Pain: Caminho Asura",                    "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Fogo",     "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 26  },
+    { "ninja": "Yagura[Jinchuuriki da Três Caudas]",     "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Água",     "preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 2   },
+    { "ninja": "Zetsu",                                  "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Terra",    "preco": 1300, "fragmentos_total": 100, "fragmentos_atual": 4   },
+    { "ninja": "Shikamaru[Grande Guerra Ninja]",         "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Terra",    "preco": 460,  "fragmentos_total": 100, "fragmentos_atual": 0   },
+    { "ninja": "Sai[Grande Guerra Ninja]",               "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Água",     "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 48  },
+    { "ninja": "Akatsuchi",                              "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 34  },
+    { "ninja": "Fuu[Jinchuuriki da Sete Caudas]",        "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Vento",    "preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Choji[Grande Guerra Ninja]",             "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Fogo",     "preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 21  },
+    { "ninja": "Killer B[Samehada]",                     "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Relâmpago","preco": 1300, "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Jinin",                                  "collection": "treino_sobrevivencia", "estrelas": 3, "elemento": "Terra",    "preco": 1300, "fragmentos_total": 100, "fragmentos_atual": 24  },
+    { "ninja": "Hinata[Grande Guerra Ninja]",            "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Relâmpago","preco": 460,  "fragmentos_total": 200, "fragmentos_atual": 94  },
+    { "ninja": "Kakashi[Garoto]",                        "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Relâmpago","preco": 200,  "fragmentos_total": 200, "fragmentos_atual": 0   },
+    { "ninja": "Neji[Grande Guerra Ninja]",              "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 34  },
+    { "ninja": "Kiba[Grande Guerra Ninja]",              "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Terra",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 38  },
+    { "ninja": "Pain: Caminho Naraka",                   "collection": "treino_sobrevivencia", "estrelas": 4, "elemento": "Vento",    "preco": 320,  "fragmentos_total": 200, "fragmentos_atual": 14  }
+
+  ]
+}
